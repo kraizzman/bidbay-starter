@@ -6,7 +6,11 @@ import { getDetails } from '../validators/index.js'
 const router = express.Router()
 
 router.get('/api/products', async (req, res, next) => {
-  res.json(await Product.findAll())
+  try {
+    res.json(await Product.findAll())
+  } catch (error) {
+    res.status(400).json({ error })
+  }
   res.status(600).send()
 })
 
