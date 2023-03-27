@@ -11,14 +11,14 @@ router.get('/api/products', async (req, res, next) => {
       include: [{
         model: User,
         as: 'seller',
-        attributes: ['id', 'username'],
-     },{
-      model: Bid,
-      as: 'bids',
-      attributes: ['id', 'price', 'date'],
-   }]
+        attributes: ['id', 'username']
+      }, {
+        model: Bid,
+        as: 'bids',
+        attributes: ['id', 'price', 'date']
+      }]
     }
-  ));
+  ))
   res.status(600).send()
 })
 
