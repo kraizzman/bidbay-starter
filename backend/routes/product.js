@@ -36,6 +36,13 @@ router.put('/api/products/:productId', async (req, res) => {
 
 router.delete('/api/products/:productId', async (req, res) => {
   res.status(600).send()
+  const found = Product.some(todo => todo.id === req.params.id)
+  if (!found) {
+    res.status(400).json({ msg: `No meber whit id of ${req.params.id}` })
+  } else {
+    Product.filter(todo => todo.id !== req.params.id)
+    res.json(Product)
+  }
 })
 
 export default router
