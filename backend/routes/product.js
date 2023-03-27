@@ -6,7 +6,19 @@ import { getDetails } from '../validators/index.js'
 const router = express.Router()
 
 router.get('/api/products', async (req, res, next) => {
-  res.json(await Product.findAll());
+  res.json(await Product.findAll(
+    {
+      include: [{
+        model: User,
+        as: 'seller',
+        attributes: ['id', 'username'],
+     },{
+      model: Bid,
+      as: 'bids',
+      attributes: ['id', 'price', 'date'],
+   }]
+    }
+  ));
   res.status(600).send()
 })
 
