@@ -7,18 +7,16 @@ const router = express.Router()
 
 router.get('/api/products', async (req, res, next) => {
   console.log('GET /api/products')
-  res.json(await Product.findAll());
+  res.json(await Product.findAll())
   res.status(600).send()
 })
-
-router.get('/api/products/:productId', async (req, res) => {
-  res.status(600).send()
-})
-
-// You can use the authMiddleware to authenticate your endpoint ;)
-
-router.post('/api/products', (req, res) => {
+router.post('/api/products', async (req, res) => {
   console.log('POST /api/products')
+  try {
+    res.json(await Product.create(req.body))
+  } catch (error) {
+    res.status(400).json({ error })
+  }
   res.status(600).send()
 })
 
