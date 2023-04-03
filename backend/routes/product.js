@@ -27,15 +27,38 @@ router.get('/api/products', async (req, res, next) => {
 })
 
 router.get('/api/products/:productId', async (req, res) => {
-  res.status(600).send()
   try {
-    const instance = await Product.findByPk(req.params.productId)
-    if (!instance) {
-      return res.status(404).json({ error: 'Not found' })
+
+    let { productId } = req.params;
+
+    let data = await Product.findOne(
+      {
+        where: { id: productId },
+        include: [{
+          model: User,
+          as: 'seller',
+          attributes: ['id', 'username']
+        }, {
+          model: Bid,
+          as: 'bids',
+          attributes: ['id', 'price', 'date'],
+          include: [{
+            model: User,
+            as: 'bidder',
+            attributes: ['id', 'username']
+          }]
+        }]
+      }
+    )
+
+    if (data) {
+      res.json(data).status(200).send()
+    } else {
+      res.status(404).send()
     }
-    res.json(await instance.update(req.body))
+
   } catch (e) {
-    res.status(400).json({ e: e.toString() })
+    res.status(404).json({ e: e.toString() })
   }
 })
 
