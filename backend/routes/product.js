@@ -17,6 +17,7 @@ router.get('/api/products', async (req, res, next) => {
           model: Bid,
           as: 'bids',
           attributes: ['id', 'price', 'date']
+
         }]
       }
     ))
