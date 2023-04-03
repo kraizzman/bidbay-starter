@@ -39,8 +39,19 @@ router.delete('/api/bids/:bidId', authMiddleware, async (req, res) => {
   res.status(600).send()
 })
 
-router.post('/api/products/:productId/bids', async (req, res) => {
-  res.status(600).send()
+router.post('/api/products/:productId/bids', authMiddleware, async (req, res) => {
+
+  try {
+    let { productId } = req.params;
+
+    req.body.productId = productId;
+    req.body.bidderId = req.user.id;
+    req.body.date = new Date();
+
+    res.status(201).json(await Bid.create(req.body))
+  } catch (error) {
+    res.status(400).json({ error: "Invalid or missing fields", details: error })
+  }
 })
 
 export default router
