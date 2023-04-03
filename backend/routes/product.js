@@ -44,9 +44,9 @@ router.get('/api/products/:productId', async (req, res) => {
 router.post('/api/products', authMiddleware, async (req, res) => {
   try {
     req.body.sellerId = req.user.id;
-    res.json(await Product.create(req.body))
+    res.status(201).json(await Product.create(req.body))
   } catch (error) {
-    res.status(400).json({ error })
+    res.status(400).json({ error: "Invalid or missing fields", details: error })
   }
   res.status(600).send()
 })
