@@ -7,7 +7,7 @@ const { isAuthenticated, isAdmin, userData, token } = useAuthStore();
 
 const error = ref(false);
 const loading = ref(false);
-const product = ref();
+const product = ref([]);
 
 const route = useRoute();
 const router = useRouter();
@@ -26,7 +26,6 @@ async function fetchProduct() {
   try {
     const res = await fetch('http://localhost:3000/api/products/' + productId.value);
     product.value = await res.json();
-    console.log(product.value)
 
     product.value.bids.sort((a, b) => {
       if (a.price < b.price) {
@@ -43,14 +42,14 @@ async function fetchProduct() {
     }
   } catch (e) {
     error.value = true;
-    console.log(e)
+
   } finally {
     loading.value = false;
   }
 }
 
 const currentProduct = computed(() => {
-  let currentProduct = product.value
+  let currentProduct = product.value;
 
   return currentProduct;
 })
