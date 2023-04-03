@@ -7,7 +7,19 @@ const router = express.Router()
 
 router.get('/api/products', async (req, res, next) => {
   try {
-    res.json(await Product.findAll())
+    res.json(await Product.findAll(
+      {
+        include: [{
+          model: User,
+          as: 'seller',
+          attributes: ['id', 'username']
+        }, {
+          model: Bid,
+          as: 'bids',
+          attributes: ['id', 'price', 'date']
+        }]
+      }
+    ))
   } catch (error) {
     res.status(400).json({ error })
   }
@@ -27,14 +39,14 @@ router.get('/api/products/:productId', async (req, res) => {
   }
 })
 
-// You can use the authMiddleware to authenticate your endpoint ;)
+// You can use the authMiddleware, req.user.id to authenticate your endpoint ;)
 
-router.post('/api/products', async (req, res) => {
-  console.log('POST /api/products')
+router.post('/api/products', authMiddleware, async (req, res) => {
   try {
-    res.json(await Product.create(req.body))
+    req.body.sellerId = req.user.id;
+    res.status(201).json(await Product.create(req.body))
   } catch (error) {
-    res.status(400).json({ error })
+    res.status(400).json({ error: "Invalid or missing fields", details: error })
   }
   res.status(600).send()
 })
